@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.fixmoviesdateadded"
-    name="Fix Movie Date's Added" version="1.0" provider-name="jmiller">
+<addon id="script.sortmoviesbyfiledate"
+    name="Sort Movie Library by file dates" version="1.0" provider-name="jmiller">
   <requires>
     <import addon="xbmc.python" version="1.0"/>
   </requires>
@@ -8,7 +8,7 @@
     <provides>executable</provides>
   </extension>
   <extension point="xbmc.addon.metadata">
-    <summary lang="en">Fix the "Date Added" fields in your Movie Library</summary>
+    <summary lang="en">Sort the Movie Library by file dates</summary>
     <description lang="en">This script will analyze the movies in your Movie Library, lookup their "file creation time" and re-sort the library based on these timestamps.  This is a great way to make the "Sort by: Date Added" feature in Library Mode more accurate.  For example, when you reset your XBMC movie library, all files will be added in alphabetical order rather than by the date you added them to your system.</description>
     <platform>all</platform>
   </extension>

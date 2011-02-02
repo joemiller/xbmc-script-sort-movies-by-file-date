@@ -1,3 +1,10 @@
+[B]Version 1.1[/B]
+- change name to script.sortmoviesbyfiledate
+- replace remaining print() with xbmc.log()
+- use strPath + strFileName instead of only strPath
+- catch and log exceptions during os.stat() (prevents script from
+  stopping if a file is missing)
+
 [B]Version 1.0[/B]
 
 - initial release
