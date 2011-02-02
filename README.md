@@ -57,12 +57,18 @@ only need to run it after you reset your Library.
 Caveats:
 --------
 - Warning!  I have only done limited testing on this script.
+
 - It was tested on Windows 7, XBMC 10.0
+
 - All of my movies were stored remotely via SMB.  It should
   work for local movies too, but other protocols may or may not work.
+
 - xbmc.makeLegalFilename() is called on each file returned from XBMC's
   database before trying to access the file, but this may not work on
   all platforms.  Only tested on Windows 7 with remote SMB files.
+
+- File CTIME (create time) is used for sorting.  On other platforms
+  it may be better to use MTIME.  This is easy to change in default.py
 
 Known Bugs
 ----------
