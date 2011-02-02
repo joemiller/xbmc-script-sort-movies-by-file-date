@@ -16,15 +16,15 @@ How to install and run
 ----------------------
 - Copy this directory to your XBMC userdata addons folder, eg:
 
-  (Vista,Win7): c:\Users\<username>\AppData\Roaming\XBMC\addons\script.fixmoviesdateadded
+    (Vista,Win7): c:\Users\<username>\AppData\Roaming\XBMC\addons\script.fixmoviesdateadded
 
-   For other platforms, find your "special://home" path in the wiki: 
-     http://wiki.xbmc.org/?title=Special_protocol
+    For other platforms, find your "special://home" path in the wiki: 
+    http://wiki.xbmc.org/?title=Special_protocol
 
 - Launch XBMC
 - Go into "Programs"
-- Execute "Fix Movie Date's Added"
-- Re-launch XBMC (may not be required, but probably a good idea to reload the database)
+- Execute "Sort Movie Library by file dates"
+- Re-launch XBMC (not be required, but a good idea to reload the database)
 
 
 How it works
@@ -56,15 +56,13 @@ only need to run it after you reset your Library.
 
 Caveats:
 --------
-I have only done limited testing on this script.  It was tested on Windows 7,
-XBMC 10.0, and all of my movies were stored remotely via SMB.  It should
-work for local movies too, but other protocols may not work.  
+- Warning!  I have only done limited testing on this script.
+- It was tested on Windows 7, XBMC 10.0
+- All of my movies were stored remotely via SMB.  It should
+  work for local movies too, but other protocols may or may not work.
 
 Known Bugs
 ----------
-
-1. Script will break if a movie in your library no longer exists on disk.
-   Workaround:  clean library before running this script
 
 Author
 ------
