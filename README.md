@@ -16,7 +16,7 @@ How to install and run
 ----------------------
 - Copy this directory to your XBMC userdata addons folder, eg:
 
-    (Vista,Win7): c:\Users\<username>\AppData\Roaming\XBMC\addons\script.fixmoviesdateadded
+    (Vista,Win7): c:\Users\<username>\AppData\Roaming\XBMC\addons\script.sortmoviesbyfiledate
 
     For other platforms, find your "special://home" path in the wiki: 
     http://wiki.xbmc.org/?title=Special_protocol
