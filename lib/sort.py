@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from platform import system
 import os
 import re
 import xbmc
@@ -15,13 +16,14 @@ libraryList =((MOVIES, "Movies", "DefaultMovies.png"),
               (MUSIC_VIDEOS, "Music Videos", "DefaultMusicVideos.png"),
              )
 
-Addon = xbmcaddon.Addon(id=os.path.basename(os.getcwd()))
+addon = xbmcaddon.Addon(id=os.path.basename(os.getcwd()))
 
 class Sort:
 
     def __init__(self, library, progress=None):
-        if(Addon.getSetting('debug')):
+        if(addon.getSetting('debug')):
             self.debug = True
+	    self.sort_key = addon.getSetting('sort_key')
 
         self.library = libraryList[library][0]
         self.progress = progress
@@ -68,7 +70,7 @@ class Sort:
 
     def get_items(self):
         """ fetch the idItem, idFile, and path+filename of all items in
-            the Library, then stat each file to get the CTIME
+            the Library, then stat each file to get the CTIME / MTIME
             (creation time).  Returns a list of tuples containing
               (ctime, idItem, idFile, filename, title)
             eg:
@@ -98,7 +100,11 @@ class Sort:
             strFileName = xbmc.makeLegalFilename(fields[3])
             fullFilePath = xbmc.makeLegalFilename(os.path.join(strPath, strFileName))
             try:
-                ctime = os.stat(fullFilePath)[ST_CTIME]
+    	    	if (self.sort_key == "Platform default" and system() == 'Linux') \
+                 or self.sort_key == "Modification (Unix/Linux)":
+                    ctime = os.stat(fullFilePath)[ST_MTIME]
+                else:
+                    ctime = os.stat(fullFilePath)[ST_CTIME]
                 item_list.append( (ctime, idItem, idFile, fullFilePath) )
             except OSError, e:
                 xbmc.log("OSerror: %s, file: %s" % (e.strerror, e.filename))

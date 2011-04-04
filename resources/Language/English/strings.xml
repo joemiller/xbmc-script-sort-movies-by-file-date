@@ -3,4 +3,5 @@
 <strings>
 <!-- Plugin settings -->
     <string id="30000">Enable Debug Logging</string>
+    <string id="30001">Sorting key</string>
 </strings>

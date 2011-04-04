@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 <settings>
-   <setting id="debug" type="bool" label="30000" default="true" />
+  <setting id="sort_key" type="labelenum" label="30001" default="Platform default" values="Platform default|Creation (Windows)|Modification (Unix/Linux)" />
+  <setting id="debug" type="bool" label="30000" default="false" />
 </settings>

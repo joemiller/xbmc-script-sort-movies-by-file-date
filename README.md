@@ -66,16 +66,13 @@ Caveats:
   all platforms.  Tested on Windows 7 with remote SMB files and on Linux
   with local files.
 
-- File CTIME (create time) is used for sorting.  On other platforms
-  it may be better to use MTIME.  This is easy to change in lib/sort.py
-
 Known Bugs
 ----------
 
 To-Do
 -----
 - support the Music Library, too
-- use settings to decide whether to sort by CTIME or MTIME
+- localize the plugin properly
 
 Author
 ------
