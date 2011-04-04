@@ -40,6 +40,9 @@ if __name__ == '__main__':
     w.doModal()
 
     if w.library is not None:
-      Sort(w.library)
+      dp = xbmcgui.DialogProgress()
+      dp.create("Sorting %s" % libraryList[w.library][1]) 
+
+      Sort(w.library, lambda x, y: dp.update(x, y))
 
     del w

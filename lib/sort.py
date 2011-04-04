@@ -19,11 +19,12 @@ Addon = xbmcaddon.Addon(id=os.path.basename(os.getcwd()))
 
 class Sort:
 
-    def __init__(self, library):
+    def __init__(self, library, progress=None):
         if(Addon.getSetting('debug')):
             self.debug = True
 
         self.library = libraryList[library][0]
+        self.progress = progress
 
         max_item_id = self.get_max_item_id()
         max_file_id = self.get_max_file_id()
@@ -34,6 +35,8 @@ class Sort:
         i = 0
         count = len(item_list)
         for item in sorted(item_list, key=itemgetter(0)):
+            if self.progress:
+                self.progress(int(i * 100 / count), item[4])
             (ctime, old_idItem, old_idFile, fullFilePath) = (item[0], item[1], item[2], item[3])
             i += 1
             new_idItem = max_item_id + i
@@ -67,11 +70,11 @@ class Sort:
         """ fetch the idItem, idFile, and path+filename of all items in
             the Library, then stat each file to get the CTIME
             (creation time).  Returns a list of tuples containing
-              (ctime, idItem, idFile, filename)
+              (ctime, idItem, idFile, filename, title)
             eg:
 
-            [ (12312312312, 1, 5, "c:/Movies/Gladiator (2000)/gladiator.mkv"),
-              (12423234223, 2, 4, "smb://user:pass@server/Movies/Something (2010)/something.avi") ]
+            [ (12312312312, 1, 5, "c:/Movies/Gladiator (2000)/gladiator.mkv", "Gladiator"),
+              (12423234223, 2, 4, "smb://user:pass@server/Movies/Something (2010)/something.avi", "Something") ]
         """
         item_list = []
         xbmc.executehttpapi( "SetResponseFormat()" )
@@ -79,11 +82,11 @@ class Sort:
         xbmc.executehttpapi( "SetResponseFormat(CloseRecord,%s)" % ( "</record>", ) )
 
         if self.library == MOVIES:
-            items_sql = "select idMovie,idFile,strPath,strFileName from movieview"
+            items_sql = "select idMovie,idFile,strPath,strFileName,c00 from movieview"
         elif self.library == TV_EPISODES:
-            items_sql = "select idEpisode,idFile,strPath,strFileName from episodeview"
+            items_sql = "select idEpisode,idFile,strPath,strFileName,c00 from episodeview"
         elif self.library == MUSIC_VIDEOS:
-            items_sql = "select idMVideo,idFile,strPath,strFileName from musicvideoview"
+            items_sql = "select idMVideo,idFile,strPath,strFileName,c00 from musicvideoview"
         if self.library in (MOVIES, TV_EPISODES, MUSIC_VIDEOS):
             sql_result = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( items_sql ), )
         records = re.findall( "<record>(.+?)</record>", sql_result, re.DOTALL )
