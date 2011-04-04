@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import os
 import re
 import xbmc
@@ -6,84 +8,134 @@ from stat import *
 from operator import itemgetter
 from urllib import quote_plus, unquote_plus
 
+MOVIES, TV_EPISODES, MUSIC_VIDEOS = range(3)
+
+libraryList =((MOVIES, "Movies", "DefaultMovies.png"),
+              (TV_EPISODES, "TV Episodes", "DefaultTVShows.png"),
+              (MUSIC_VIDEOS, "Music Videos", "DefaultMusicVideos.png"),
+             )
+
 Addon = xbmcaddon.Addon(id=os.path.basename(os.getcwd()))
 
-class Main:
+class Sort:
 
-    def __init__(self):
+    def __init__(self, library):
         if(Addon.getSetting('debug')):
             self.debug = True
 
-        max_movie_id = self.get_max_movie_id()
-        max_file_id  = self.get_max_file_id()
-        movie_list   = self.get_movies()
+        self.library = libraryList[library][0]
 
-        # iterate through each video, sorting by ctime, then update
-	# the video's id in the database
+        max_item_id = self.get_max_item_id()
+        max_file_id = self.get_max_file_id()
+        item_list   = self.get_items()
+
+        # iterate through each item, sorting by ctime, then update
+    # the item's id in the database
         i = 0
-        for movie in sorted(movie_list, key=itemgetter(0)):
-            (ctime, old_idMovie, old_idFile, fullFilePath) = (movie[0], movie[1], movie[2], movie[3])
+        count = len(item_list)
+        for item in sorted(item_list, key=itemgetter(0)):
+            (ctime, old_idItem, old_idFile, fullFilePath) = (item[0], item[1], item[2], item[3])
             i += 1
-            new_idMovie = max_movie_id + i
+            new_idItem = max_item_id + i
             new_idFile  = max_file_id + i
             if self.debug:
-                xbmc.log("ctime: %d old_idMovie: %d new_idMovie: %d old_idFile: %d new_idFile: %d file: %s" %
-                         (ctime, old_idMovie, new_idMovie, old_idFile, new_idFile, fullFilePath))
-            self.update_movie_and_file_id(old_idMovie, new_idMovie, old_idFile, new_idFile)
-        
-        xbmc.log('script.sortmoviesbyfiledate addon run complete')
+                xbmc.log("ctime: %d old_idItem: %d new_idItem: %d old_idFile: %d new_idFile: %d file: %s" %
+                         (ctime, old_idItem, new_idItem, old_idFile, new_idFile, fullFilePath))
+            self.update_item_and_file_id(old_idItem, new_idItem, old_idFile, new_idFile)
 
-    def get_max_movie_id(self):
-        get_maxid_sql = "select max(idMovie) from movieview"
-        sql_result = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( get_maxid_sql ), )
+        xbmc.log('script.sort-media addon run complete')
+
+    def get_max_item_id(self):
+        if self.library == MOVIES:
+            get_maxid_sql = "select max(idMovie) from movieview"
+        elif self.library == TV_EPISODES:
+            get_maxid_sql = "select max(idEpisode) from episodeviev"
+        elif self.library == MUSIC_VIDEOS:
+            get_maxid_sql = "select max(idMVideo) from musicvideoview"
+
+        if self.library in (MOVIES, TV_EPISODES, MUSIC_VIDEOS):
+            sql_result = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( get_maxid_sql ), )
         return int((re.findall( "<field>(.+?)</field>", sql_result, re.DOTALL ))[0])
 
     def get_max_file_id(self):
         get_maxid_sql = "select max(idFile) from files"
-        sql_result = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( get_maxid_sql ), )
+        if self.library in (MOVIES, TV_EPISODES, MUSIC_VIDEOS):
+            sql_result = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( get_maxid_sql ), )
         return int((re.findall( "<field>(.+?)</field>", sql_result, re.DOTALL ))[0])
 
-    def get_movies(self):
-        """ fetch the idMovie, idFile, and path+filename of all movies in
-            the Movie Library, then stat each file to get the CTIME
+    def get_items(self):
+        """ fetch the idItem, idFile, and path+filename of all items in
+            the Library, then stat each file to get the CTIME
             (creation time).  Returns a list of tuples containing
-              (ctime, idMovie, idFile, filename)
+              (ctime, idItem, idFile, filename)
             eg:
-            
+
             [ (12312312312, 1, 5, "c:/Movies/Gladiator (2000)/gladiator.mkv"),
               (12423234223, 2, 4, "smb://user:pass@server/Movies/Something (2010)/something.avi") ]
         """
-        movie_list = []
+        item_list = []
         xbmc.executehttpapi( "SetResponseFormat()" )
         xbmc.executehttpapi( "SetResponseFormat(OpenRecord,%s)" % ( "<record>", ) )
         xbmc.executehttpapi( "SetResponseFormat(CloseRecord,%s)" % ( "</record>", ) )
 
-        movies_sql = "select idMovie,idFile,strPath,strFileName from movieview"
-        sql_result = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( movies_sql ), )
+        if self.library == MOVIES:
+            items_sql = "select idMovie,idFile,strPath,strFileName from movieview"
+        elif self.library == TV_EPISODES:
+            items_sql = "select idEpisode,idFile,strPath,strFileName from episodeview"
+        elif self.library == MUSIC_VIDEOS:
+            items_sql = "select idMVideo,idFile,strPath,strFileName from musicvideoview"
+        if self.library in (MOVIES, TV_EPISODES, MUSIC_VIDEOS):
+            sql_result = xbmc.executehttpapi( "QueryVideoDatabase(%s)" % quote_plus( items_sql ), )
         records = re.findall( "<record>(.+?)</record>", sql_result, re.DOTALL )
         for record in records:
             fields = re.findall( "<field>(.*?)</field>", record, re.DOTALL )
-            idMovie = int(fields[0])
+            idItem = int(fields[0])
             idFile  = int(fields[1])
             strPath = xbmc.makeLegalFilename(fields[2])
             strFileName = xbmc.makeLegalFilename(fields[3])
             fullFilePath = xbmc.makeLegalFilename(os.path.join(strPath, strFileName))
-	    try:
-            	ctime = os.stat(fullFilePath)[ST_CTIME]
-            	movie_list.append( (ctime, idMovie, idFile, fullFilePath) )
-	    except OSError, e:
-	        xbmc.log("OSerror: %s, file: %s" % (e.strerror, e.filename))
-        return movie_list
+            try:
+                ctime = os.stat(fullFilePath)[ST_CTIME]
+                item_list.append( (ctime, idItem, idFile, fullFilePath) )
+            except OSError, e:
+                xbmc.log("OSerror: %s, file: %s" % (e.strerror, e.filename))
+        return item_list
 
-    def update_movie_and_file_id(self, old_idMovie, new_idMovie, old_idFile, new_idFile):
-        update_sql = ("update movie set idMovie=%d, idFile=%d where idMovie=%d" %
-                     (new_idMovie, new_idFile, old_idMovie))
-        xbmc.executehttpapi( "ExecVideoDatabase(%s)" % quote_plus( update_sql ), )
-        
-        update_sql = ("update files set idFile=%d where idFile=%d" %
-                     (new_idFile, old_idFile))
-        xbmc.executehttpapi( "ExecVideoDatabase(%s)" % quote_plus( update_sql ), )
+    def update_item_and_file_id(self, old_idItem, new_idItem, old_idFile, new_idFile):
+        if self.library == MOVIES:
+            update_sql = ("update movie set idMovie=%(newItemId)d, idFile=%(newFileId)d where idMovie=%(oldItemId)d; " \
+                          "update actorlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update countrylinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update directorlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update genrelinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update movielinktvshow set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update setlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update studiolinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update writerlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " %
+                          {'newItemId': new_idItem, 'newFileId': new_idFile, 'oldItemId': old_idItem})
 
-        
-#run the program
-run_program = Main()
+        elif self.library == TV_EPISODES:
+            update_sql = ("update episode set idMovie=%(newItemId)d, idFile=%(newFileId)d where idMovie=%(oldItemId)d; " \
+                          "update actorlink episode set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update directorlinkepisode set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update tvshowlinkepisode set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update writerlinkepisode set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " %
+                          {'newItemId': new_idItem, 'newFileId': new_idFile, 'oldItemId': old_idItem})
+
+        elif self.library == MUSIC_VIDEOS:
+            update_sql = ("update musicvideo set idMovie=%(newItemId)d, idFile=%(newFileId)d where idMovie=%(oldItemId)d; " \
+                          "update actorlinkmusicvideo set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update directorlinkmusicvideo set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update genrelinkmusicvideo set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
+                          "update studiolinkmusicvideo set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " %
+                          {'newItemId': new_idItem, 'newFileId': new_idFile, 'oldItemId': old_idItem})
+
+        if self.library in (MOVIES, TV_EPISODES, MUSIC_VIDEOS):
+            xbmc.executehttpapi( "ExecVideoDatabase(%s)" % quote_plus( update_sql ), )
+
+            update_sql = ("update files set idFile=%(newFileId)d where idFile=%(oldFileId)d; " \
+                          "update bookmark set idFile=%(newFileId)d where idFile=%(oldFileId)d; " \
+                          "update stacktimes set idFile=%(newFileId)d where idFile=%(oldFileId)d; " \
+                          "update streamdetails set idFile=%(newFileId)d where idFile=%(oldFileId)d; " %
+                          {'newFileId': new_idFile, 'oldFileId': old_idFile})
+            xbmc.executehttpapi( "ExecVideoDatabase(%s)" % quote_plus( update_sql ), )
