@@ -8,6 +8,7 @@ import xbmcaddon
 from stat import *
 from operator import itemgetter
 from urllib import quote_plus, unquote_plus
+from datetime import datetime
 
 MOVIES, TV_EPISODES, MUSIC_VIDEOS = range(3)
 
@@ -36,6 +37,9 @@ class Sort:
         # the item's id in the database
         i = 0
         count = len(item_list)
+
+        self.debug and xbmc.log("[media-sort] max_item_id: %d max_file_id: %d item_count:%d" % (max_item_id, max_file_id, len(item_list)))
+
         for item in sorted(item_list, key=itemgetter(0)):
             if self.progress:
                 self.progress(int(i * 100 / count), item[4])
@@ -44,11 +48,11 @@ class Sort:
             new_idItem = max_item_id + i
             new_idFile  = max_file_id + i
             if self.debug:
-                xbmc.log("ctime: %d old_idItem: %d new_idItem: %d old_idFile: %d new_idFile: %d file: %s" %
-                         (ctime, old_idItem, new_idItem, old_idFile, new_idFile, fullFilePath))
+                xbmc.log("[media-sort] time: %s old_idItem: %d new_idItem: %d old_idFile: %d new_idFile: %d file: %s" %
+                         (str(datetime.fromtimestamp(ctime)), old_idItem, new_idItem, old_idFile, new_idFile, fullFilePath))
             self.update_item_and_file_id(old_idItem, new_idItem, old_idFile, new_idFile)
 
-        xbmc.log('script.sort-media addon run complete')
+        xbmc.log('[media-sort] sorting complete')
 
     def get_max_item_id(self):
         if self.library == MOVIES:
@@ -108,7 +112,7 @@ class Sort:
                     ctime = os.stat(fullFilePath)[ST_CTIME]
                 item_list.append( (ctime, idItem, idFile, fullFilePath) )
             except OSError, e:
-                xbmc.log("OSerror: %s, file: %s" % (e.strerror, e.filename))
+                xbmc.log("[media-sort] OSerror: %s, file: %s" % (e.strerror, e.filename))
         return item_list
 
     def update_item_and_file_id(self, old_idItem, new_idItem, old_idFile, new_idFile):
