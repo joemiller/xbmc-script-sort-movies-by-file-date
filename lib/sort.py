@@ -33,7 +33,7 @@ class Sort:
         item_list   = self.get_items()
 
         # iterate through each item, sorting by ctime, then update
-    # the item's id in the database
+        # the item's id in the database
         i = 0
         count = len(item_list)
         for item in sorted(item_list, key=itemgetter(0)):
@@ -54,7 +54,7 @@ class Sort:
         if self.library == MOVIES:
             get_maxid_sql = "select max(idMovie) from movieview"
         elif self.library == TV_EPISODES:
-            get_maxid_sql = "select max(idEpisode) from episodeviev"
+            get_maxid_sql = "select max(idEpisode) from episodeview"
         elif self.library == MUSIC_VIDEOS:
             get_maxid_sql = "select max(idMVideo) from musicvideoview"
 
@@ -99,6 +99,7 @@ class Sort:
             strPath = xbmc.makeLegalFilename(fields[2])
             strFileName = xbmc.makeLegalFilename(fields[3])
             fullFilePath = xbmc.makeLegalFilename(os.path.join(strPath, strFileName))
+            strTitle = fields[4]
             try:
     	    	if (self.sort_key == "Platform default" and system() == 'Linux') \
                  or self.sort_key == "Modification (Unix/Linux)":
