@@ -24,7 +24,14 @@ class Sort:
     def __init__(self, library, progress=None):
         if(addon.getSetting('debug')):
             self.debug = True
-	    self.sort_key = addon.getSetting('sort_key')
+            sort_setting = addon.getSetting('sort_key')
+        if (sort_setting == "Platform default" and system() == 'Linux') \
+         or sort_setting == "Modification (Unix/Linux)":
+            self.sort_key = ST_MTIME
+            self.debug and xbmc.log("[media-sort] using MTIME")
+        else:
+            self.sort_key = ST_CTIME
+            self.debug and xbmc.log("[media-sort] using CTIME")
 
         self.library = libraryList[library][0]
         self.progress = progress
@@ -105,12 +112,8 @@ class Sort:
             fullFilePath = xbmc.makeLegalFilename(os.path.join(strPath, strFileName))
             strTitle = fields[4]
             try:
-    	    	if (self.sort_key == "Platform default" and system() == 'Linux') \
-                 or self.sort_key == "Modification (Unix/Linux)":
-                    ctime = os.stat(fullFilePath)[ST_MTIME]
-                else:
-                    ctime = os.stat(fullFilePath)[ST_CTIME]
-                item_list.append( (ctime, idItem, idFile, fullFilePath) )
+                ctime = os.stat(fullFilePath)[self.sort_key]
+                item_list.append( (ctime, idItem, idFile, fullFilePath, strTitle) )
             except OSError, e:
                 xbmc.log("[media-sort] OSerror: %s, file: %s" % (e.strerror, e.filename))
         return item_list
