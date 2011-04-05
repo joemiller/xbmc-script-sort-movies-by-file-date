@@ -73,6 +73,8 @@ To-Do
 -----
 - support the Music Library, too
 - localize the plugin properly
+- enclose updates in a transaction
+- handle cancel button in progress dialog
 
 Author
 ------
