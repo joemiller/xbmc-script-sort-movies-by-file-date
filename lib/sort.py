@@ -122,40 +122,37 @@ class Sort:
         return item_list
 
     def update_item_and_file_id(self, old_idItem, new_idItem, old_idFile, new_idFile):
+        sql_dict = {'newItemId': new_idItem, 'newFileId': new_idFile, 'oldItemId': old_idItem, 'oldFileId': old_idFile}
         if self.library == MOVIES:
-            update_sql = ("update movie set idMovie=%(newItemId)d, idFile=%(newFileId)d where idMovie=%(oldItemId)d; " \
-                          "update actorlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update countrylinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update directorlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update genrelinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update movielinktvshow set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update setlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update studiolinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update writerlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " %
-                          {'newItemId': new_idItem, 'newFileId': new_idFile, 'oldItemId': old_idItem})
+            update_sql = ["update movie set idMovie=%(newItemId)d, idFile=%(newFileId)d where idMovie=%(oldItemId)d;",
+                          "update actorlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d;",
+                          "update countrylinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d;",
+                          "update directorlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d;",
+                          "update genrelinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d;",
+                          "update movielinktvshow set idMovie=%(newItemId)d where idMovie=%(oldItemId)d;",
+                          "update setlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d;",
+                          "update studiolinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d;",
+                          "update writerlinkmovie set idMovie=%(newItemId)d where idMovie=%(oldItemId)d;"]
 
         elif self.library == TV_EPISODES:
-            update_sql = ("update episode set idEpisode=%(newItemId)d, idFile=%(newFileId)d where idEpisode=%(oldItemId)d; " \
-                          "update actorlink episode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d; " \
-                          "update directorlinkepisode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d; " \
-                          "update tvshowlinkepisode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d; " \
-                          "update writerlinkepisode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d; " %
-                          {'newItemId': new_idItem, 'newFileId': new_idFile, 'oldItemId': old_idItem})
+            update_sql = ["update episode set idEpisode=%(newItemId)d, idFile=%(newFileId)d where idEpisode=%(oldItemId)d;",
+                          "update actorlinkepisode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d;",
+                          "update directorlinkepisode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d;",
+                          "update tvshowlinkepisode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d;",
+                          "update writerlinkepisode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d;"]
 
         elif self.library == MUSIC_VIDEOS:
-            update_sql = ("update musicvideo set idMVideo=%(newItemId)d, idFile=%(newFileId)d where idMVideo=%(oldItemId)d; " \
-                          "update actorlinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d; " \
-                          "update directorlinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d; " \
-                          "update genrelinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d; " \
-                          "update studiolinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d; " %
-                          {'newItemId': new_idItem, 'newFileId': new_idFile, 'oldItemId': old_idItem})
+            update_sql = ["update musicvideo set idMVideo=%(newItemId)d, idFile=%(newFileId)d where idMVideo=%(oldItemId)d;",
+                          "update actorlinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d;",
+                          "update directorlinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d;",
+                          "update genrelinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d;",
+                          "update studiolinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d;"]
 
         if self.library in (MOVIES, TV_EPISODES, MUSIC_VIDEOS):
-            xbmc.executehttpapi( "ExecVideoDatabase(%s)" % quote_plus( update_sql ), )
+            update_sql += ["update files set idFile=%(newFileId)d where idFile=%(oldFileId)d;",
+                          "update bookmark set idFile=%(newFileId)d where idFile=%(oldFileId)d;",
+                          "update stacktimes set idFile=%(newFileId)d where idFile=%(oldFileId)d;",
+                          "update streamdetails set idFile=%(newFileId)d where idFile=%(oldFileId)d;"]
 
-            update_sql = ("update files set idFile=%(newFileId)d where idFile=%(oldFileId)d; " \
-                          "update bookmark set idFile=%(newFileId)d where idFile=%(oldFileId)d; " \
-                          "update stacktimes set idFile=%(newFileId)d where idFile=%(oldFileId)d; " \
-                          "update streamdetails set idFile=%(newFileId)d where idFile=%(oldFileId)d; " %
-                          {'newFileId': new_idFile, 'oldFileId': old_idFile})
-            xbmc.executehttpapi( "ExecVideoDatabase(%s)" % quote_plus( update_sql ), )
+            for q in update_sql:
+                xbmc.executehttpapi( "ExecVideoDatabase(%s)" % quote_plus( q % sql_dict ), )
