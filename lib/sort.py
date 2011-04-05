@@ -135,19 +135,19 @@ class Sort:
                           {'newItemId': new_idItem, 'newFileId': new_idFile, 'oldItemId': old_idItem})
 
         elif self.library == TV_EPISODES:
-            update_sql = ("update episode set idMovie=%(newItemId)d, idFile=%(newFileId)d where idMovie=%(oldItemId)d; " \
-                          "update actorlink episode set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update directorlinkepisode set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update tvshowlinkepisode set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update writerlinkepisode set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " %
+            update_sql = ("update episode set idEpisode=%(newItemId)d, idFile=%(newFileId)d where idEpisode=%(oldItemId)d; " \
+                          "update actorlink episode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d; " \
+                          "update directorlinkepisode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d; " \
+                          "update tvshowlinkepisode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d; " \
+                          "update writerlinkepisode set idEpisode=%(newItemId)d where idEpisode=%(oldItemId)d; " %
                           {'newItemId': new_idItem, 'newFileId': new_idFile, 'oldItemId': old_idItem})
 
         elif self.library == MUSIC_VIDEOS:
-            update_sql = ("update musicvideo set idMovie=%(newItemId)d, idFile=%(newFileId)d where idMovie=%(oldItemId)d; " \
-                          "update actorlinkmusicvideo set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update directorlinkmusicvideo set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update genrelinkmusicvideo set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " \
-                          "update studiolinkmusicvideo set idMovie=%(newItemId)d where idMovie=%(oldItemId)d; " %
+            update_sql = ("update musicvideo set idMVideo=%(newItemId)d, idFile=%(newFileId)d where idMVideo=%(oldItemId)d; " \
+                          "update actorlinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d; " \
+                          "update directorlinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d; " \
+                          "update genrelinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d; " \
+                          "update studiolinkmusicvideo set idMVideo=%(newItemId)d where idMVideo=%(oldItemId)d; " %
                           {'newItemId': new_idItem, 'newFileId': new_idFile, 'oldItemId': old_idItem})
 
         if self.library in (MOVIES, TV_EPISODES, MUSIC_VIDEOS):
