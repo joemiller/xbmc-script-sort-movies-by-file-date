@@ -1,3 +1,10 @@
+[B]Version 2.0[/B]
+- major changes, thanks to https://github.com/Saviq. Thanks Saviq!!
+- name changed to script.sort-media
+- progress bar added
+- sort criteria switchable between mtime and ctime
+- now supports sorting TV-Shows and Music-Video libraries too
+
 [B]Version 1.1[/B]
 - change name to script.sortmoviesbyfiledate
 - replace remaining print() with xbmc.log()
