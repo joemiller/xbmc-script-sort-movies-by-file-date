@@ -17,7 +17,7 @@ libraryList =((MOVIES, "Movies", "DefaultMovies.png"),
               (MUSIC_VIDEOS, "Music Videos", "DefaultMusicVideos.png"),
              )
 
-addon = xbmcaddon.Addon(id=os.path.basename(os.getcwd()))
+addon = xbmcaddon.Addon(id='script.sort-media')
 
 class Sort:
 
