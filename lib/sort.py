@@ -25,13 +25,13 @@ class Sort:
         if(addon.getSetting('debug')):
             self.debug = True
             sort_setting = addon.getSetting('sort_key')
-        if (sort_setting == "Platform default" and system() == 'Linux') \
-         or sort_setting == "Modification (Unix/Linux)":
-            self.sort_key = ST_MTIME
-            self.debug and xbmc.log("[media-sort] using MTIME")
-        else:
+        if (sort_setting == "Platform default" and system() == 'Windows') \
+         or sort_setting == "Creation (Windows)":
             self.sort_key = ST_CTIME
             self.debug and xbmc.log("[media-sort] using CTIME")
+        else:
+            self.sort_key = ST_MTIME
+            self.debug and xbmc.log("[media-sort] using MTIME")
 
         self.library = libraryList[library][0]
         self.progress = progress
