@@ -14,9 +14,12 @@ http://forum.xbmc.org/showthread.php?t=58525
 
 How to install and run
 ----------------------
-- Copy this directory to your XBMC userdata addons folder, eg:
+- Download a zip file from github by clicking on the Downloads link on
+  the github page at https://github.com/joemiller/xbmc-script-sort-movies-by-file-date
 
-    (Vista,Win7): c:\Users\<username>\AppData\Roaming\XBMC\addons\script.sortmoviesbyfiledate
+- Unzip the contents of the zip into a directory in your addons folder:
+
+    (Vista,Win7): c:\Users\<username>\AppData\Roaming\XBMC\addons\script.sort-media
 
     For other platforms, find your "special://home" path in the wiki:
     http://wiki.xbmc.org/?title=Special_protocol
@@ -27,10 +30,9 @@ How to install and run
 - Re-launch XBMC (not required, but a good idea to reload the database)
 
 This script should only be ran once, after you create your
-media Library for the first time (or after you reset your library.)
-
-All future media added to the library will be added in the
-correct chronological order.
+media Library for the first time (or after you reset your library.), since
+all future media added to the library will be added in the correct
+chronological order.
 
 How it works
 ------------
@@ -71,6 +73,7 @@ Known Bugs
 
 To-Do
 -----
+- better/simpler installation.  publish to official xbmc plugin repo
 - support the Music Library, too
 - localize the plugin properly
 - enclose updates in a transaction

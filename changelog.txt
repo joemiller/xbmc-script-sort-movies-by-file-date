@@ -1,3 +1,10 @@
+[B]Version 2.1[/B]
+- fixed github issue/2.
+- fixed bug where mac osx would sort by ctime (like windows) instead of mtime 
+  (like linux/unix)
+- fallback in case platform cannot be detected is now to use mtime (linux/unix),
+  since most unknown systems are more likely to follow linux semantics than windows
+
 [B]Version 2.0[/B]
 - major changes, thanks to https://github.com/Saviq. Thanks Saviq!!
 - name changed to script.sort-media

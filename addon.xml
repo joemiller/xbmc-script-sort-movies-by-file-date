@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="script.sort-media"
-    name="Sort Media Libraries by file dates" version="2.0" provider-name="jmiller">
+    name="Sort Media Libraries by file dates" version="2.1" provider-name="jmiller">
   <requires>
-    <import addon="xbmc.python" version="2.0"/>
+    <import addon="xbmc.python" version="2.1"/>
   </requires>
   <extension point="xbmc.python.script" library="default.py">
     <provides>executable</provides>
