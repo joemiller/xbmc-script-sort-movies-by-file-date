@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<strings>
+<!-- Plugin settings -->
+   <string id="30000">Debug Protokollierung</string>
+   <string id="30001">Sortierschlüssel</string>
+</strings>
