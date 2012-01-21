@@ -12,6 +12,10 @@ This was inspired by my own personal needs, and apparantly many others
 on this thread:
 http://forum.xbmc.org/showthread.php?t=58525
 
+(1/21/2012) Important Note: This plugin is only functional on XBMC 10.x (Dharma), it will
+not work on 11.x (Eden) at this time. See here for additional discussion on why
+and what we need to do before this will work on Eden: https://github.com/joemiller/xbmc-script-sort-movies-by-file-date/issues/4#issuecomment-3598657
+
 How to install and run
 ----------------------
 - Download a zip file from github by clicking on the Downloads link on
