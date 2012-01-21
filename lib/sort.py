@@ -111,8 +111,11 @@ class Sort:
             if fields[3].startswith('stack://'):
                 fields[3] = fields[3][8:].split(' , ')[0].replace(',,', ',')
             strPath = xbmc.makeLegalFilename(fields[2])
-            strFileName = xbmc.makeLegalFilename(fields[3])
+            #strFileName = xbmc.makeLegalFilename(fields[3])
+            strFileName = fields[3]
             fullFilePath = xbmc.makeLegalFilename(os.path.join(strPath, strFileName))
+            xbmc.log("[media-sort] fields-2='%s' 3='%s'" % (fields[2], fields[3]))
+            xbmc.log("[media-sort] fullFilePath='%s' strPath='%s' strFileName='%s'" % (fullFilePath, strPath, strFileName))
             strTitle = fields[4]
             try:
                 ctime = os.stat(fullFilePath)[self.sort_key]
