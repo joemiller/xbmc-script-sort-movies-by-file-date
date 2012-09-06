@@ -110,9 +110,7 @@ class Sort:
             # only choose the first file from a stack
             if fields[3].startswith('stack://'):
                 fields[3] = fields[3][8:].split(' , ')[0].replace(',,', ',')
-            strPath = xbmc.makeLegalFilename(fields[2])
-            strFileName = xbmc.makeLegalFilename(fields[3])
-            fullFilePath = xbmc.makeLegalFilename(os.path.join(strPath, strFileName))
+            fullFilePath = xbmc.makeLegalFilename(os.path.join(fields[2], fields[3]))
             strTitle = fields[4]
             try:
                 ctime = os.stat(fullFilePath)[self.sort_key]
